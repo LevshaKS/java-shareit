@@ -8,7 +8,7 @@ public interface BookingRepository {
 
     Booking save(Booking booking);
 
-    Booking update(long Id, Booking booking);
+    Booking update(long id, Booking booking);
 
 
     void del(long itemId);
