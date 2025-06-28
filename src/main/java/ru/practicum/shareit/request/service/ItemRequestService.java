@@ -7,15 +7,15 @@ import java.util.Collection;
 
 public interface ItemRequestService {
 
-    ItemRequest saveItemRequest (long userId,ItemRequestDto itemRequestDto);
+    ItemRequest saveItemRequest(long userId, ItemRequestDto itemRequestDto);
 
-    ItemRequest updateItemRequest (long userId, long itemId,ItemRequestDto itemRequestDto);
+    ItemRequest updateItemRequest(long userId, long itemId, ItemRequestDto itemRequestDto);
 
     ItemRequestDto findIdItemRequestById(long id);
 
-    ItemRequestDto findItemRequestByDescription (String description);
+    ItemRequestDto findItemRequestByDescription(String description);
 
-    Collection<ItemRequestDto> findAll ();
+    Collection<ItemRequestDto> findAll();
 
-    void delete (long userId, long id);
+    void delete(long userId, long id);
 }
