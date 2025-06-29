@@ -83,8 +83,8 @@ public class ItemServiceImpl implements ItemService {
     public Collection<ItemDto> findItemByName(String name) {
 
         log.info("передан запрос поиска вещей по названию " + name.toLowerCase());
-        return itemRepository.findItemByName(name.toLowerCase()).stream().
-                map(ItemMapper::mapToItemDto)
+        return itemRepository.findItemByName(name.toLowerCase()).stream()
+                .map(ItemMapper::mapToItemDto)
                 .collect(Collectors.toList());
     }
 }
