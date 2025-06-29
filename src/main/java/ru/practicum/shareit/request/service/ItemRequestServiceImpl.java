@@ -27,7 +27,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     private final UserRepository userRepository;
 
     @Override
-    public ItemRequest saveItemRequest(long userId, ItemRequestDto itemRequestDto) {
+    public ItemRequestDto saveItemRequest(long userId, ItemRequestDto itemRequestDto) {
         if (userRepository.findById(userId) == null) {
             throw new NotDataException("нет такого пользователя");
         }
@@ -42,11 +42,11 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         itemRequest.setCreated(LocalDateTime.now());
         itemRequest = itemRequestRepository.save(itemRequest);
         log.info("создан запрос id " + itemRequest.getId());
-        return itemRequest;
+        return RequestMapper.mapToRequestDto(itemRequest);
     }
 
     @Override
-    public ItemRequest updateItemRequest(long userId, long itemId, ItemRequestDto itemRequestDto) {
+    public ItemRequestDto updateItemRequest(long userId, long itemId, ItemRequestDto itemRequestDto) {
         if (itemRequestRepository.findById(itemId) == null) {
             throw new NotDataException("нет запроса вещи с таким id " + itemId);
         }
@@ -58,7 +58,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         itemRequest.setCreated(LocalDateTime.now());
         log.info("обновление вещи, передан id " + itemId);
         itemRequest = itemRequestRepository.update(itemRequest);
-        return itemRequest;
+        return RequestMapper.mapToRequestDto(itemRequest);
     }
 
     @Override
@@ -95,7 +95,6 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         }
         itemRequestRepository.delete(id);
         log.info("удаление запроса вещи, передан id " + id);
-
 
     }
 }

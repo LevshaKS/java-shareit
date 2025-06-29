@@ -28,7 +28,7 @@ public class BookingServiceImpl implements BookingService {
     private final ValidateBookingController validateBookingController;
 
     @Override
-    public Booking saveBooking(long userId, BookingDto bookingDto) {
+    public BookingDto saveBooking(long userId, BookingDto bookingDto) {
         validateBookingController.validateBookingDto(bookingDto);
         if (userService.findByIdUser(userId) == null) {
             log.warn("нет такого пользователя");
@@ -51,11 +51,11 @@ public class BookingServiceImpl implements BookingService {
         booking.setStatus(Status.WAITTING);
         booking = bookingRepository.save(booking);
         log.info("сохранение запроса бронирование id" + booking.getId());
-        return booking;
+        return BookingMapper.mapToBookingDto(booking);
     }
 
     @Override
-    public Booking updateBooking(long userId, long itemId, BookingDto bookingDto) {
+    public BookingDto updateBooking(long userId, long itemId, BookingDto bookingDto) {
 
         Booking booking = bookingRepository.getById(itemId);
 
@@ -67,12 +67,6 @@ public class BookingServiceImpl implements BookingService {
             log.warn("нет такого запроса");
             throw new NotDataException("нет такого запроса");
         }
-
-
-        System.out.println(userId);
-        System.out.println(booking);
-        System.out.println(bookingDto);
-
 
         if (booking.getBooker() != userId && itemService.getItemByItemId(booking.getItem()).getOwner() != userId) {
             log.warn("вы не собственник запроса и не владелиц вещи");
@@ -91,8 +85,9 @@ public class BookingServiceImpl implements BookingService {
             }
         }
         log.info("обновили запрос");
-
-        return bookingRepository.update(itemId, BookingMapper.mapToBooking(bookingDto));
+        bookingDto.setItem(itemId);
+        bookingRepository.update(itemId, BookingMapper.mapToBooking(bookingDto));
+        return bookingDto;
     }
 
     @Override

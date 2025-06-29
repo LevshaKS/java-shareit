@@ -25,16 +25,16 @@ public class UserServiceImpl implements UserService {
     private final ValidateUserController validateUserController;
 
     @Override
-    public User saveUser(UserDto userDto) {
+    public UserDto saveUser(UserDto userDto) {
         validateUserController.validateUserDto(userDto);
         User user = UserMapper.mapToUser(userDto);
         log.info("пердан пользователь для создания");
         user = userRepository.save(user);
-        return user;
+        return UserMapper.mapToUserDto(user);
     }
 
     @Override
-    public User updateUser(Long userId, UserDto userDto) {
+    public UserDto updateUser(Long userId, UserDto userDto) {
         User updateUser = userRepository.findById(userId);
         if (updateUser == null) {
             throw new NotDataException("нет такого пользователя");
@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
             updateUser = UserMapper.mapToUserUpdate(userId, userDto);
             updateUser = userRepository.update(updateUser);
             log.info("передали пользователя для обновления");
-            return updateUser;
+            return UserMapper.mapToUserDto(updateUser);
 
         } else {
             log.warn("такой email уже есть");
@@ -60,13 +60,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByIdUser(long id) {
+    public UserDto findByIdUser(long id) {
         User user = userRepository.findById(id);
         if (user == null) {
             throw new NotDataException("нет такого пользоваетля");
         }
         log.info("передали запрос пользователя по id " + id);
-        return user;
+        return UserMapper.mapToUserDto(user);
     }
 
     @Override

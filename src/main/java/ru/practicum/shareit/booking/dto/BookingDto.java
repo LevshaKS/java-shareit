@@ -6,9 +6,6 @@ import ru.practicum.shareit.booking.Status;
 
 import java.time.LocalDateTime;
 
-/**
- * TODO Sprint add-bookings.
- */
 @Data
 public class BookingDto {
 
@@ -22,7 +19,7 @@ public class BookingDto {
 
     private Long item;
 
-    //  private long booker; //оставил на всякий случай
+    private long booker;
 
     private Status status;
 }

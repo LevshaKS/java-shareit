@@ -14,6 +14,7 @@ import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -25,7 +26,7 @@ public class ItemServiceImpl implements ItemService {
     private final ValidateItemController validateItemController;
 
     @Override
-    public Item saveItem(long userId, ItemDto itemDto) {
+    public ItemDto saveItem(long userId, ItemDto itemDto) {
         if (userRepository.findById(userId) == null) {
             throw new ErrorIsNull("нет такого пользователя");
         }
@@ -34,7 +35,7 @@ public class ItemServiceImpl implements ItemService {
         item.setOwner(userId);
         item = itemRepository.save(item);
         log.info("пердана вещь для создания");
-        return item;
+        return ItemMapper.mapToItemDto(item);
     }
 
     @Override
@@ -50,7 +51,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Item updateItem(long userId, long itemId, ItemDto itemDto) {
+    public ItemDto updateItem(long userId, long itemId, ItemDto itemDto) {
         if (getItemByItemId(itemId) == null) {
             throw new NotDataException("нет вещи с таким id " + itemId);
         }
@@ -60,25 +61,30 @@ public class ItemServiceImpl implements ItemService {
         Item item = ItemMapper.mapToItem(itemDto);
         item.setId(itemId);
         log.info("обновление вещи, передан id " + itemId);
-        return itemRepository.update(item);
+        itemRepository.update(item);
+        return ItemMapper.mapToItemDto(item);
     }
 
     @Override
-    public Item getItemByItemId(long id) {
+    public ItemDto getItemByItemId(long id) {
         log.info("передан запрос вещи по id " + id);
-        return itemRepository.getByItemId(id);
+        return ItemMapper.mapToItemDto(itemRepository.getByItemId(id));
     }
 
     @Override
-    public Collection<Item> getAllItemByUserId(long id) {
+    public Collection<ItemDto> getAllItemByUserId(long id) {
         log.info("передан запрос списка вещей пользователя id " + id);
-        return itemRepository.getAllByUserId(id);
+        return itemRepository.getAllByUserId(id).stream()
+                .map(ItemMapper::mapToItemDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Collection<Item> findItemByName(String name) {
+    public Collection<ItemDto> findItemByName(String name) {
 
         log.info("передан запрос поиска вещей по названию " + name.toLowerCase());
-        return itemRepository.findItemByName(name.toLowerCase());
+        return itemRepository.findItemByName(name.toLowerCase()).stream().
+                map(ItemMapper::mapToItemDto)
+                .collect(Collectors.toList());
     }
 }

@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class UserDto {
-    //  private Long id;   //оставил на всякий случай
+    private Long id;
 
     private String name;
 

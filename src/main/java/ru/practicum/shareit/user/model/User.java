@@ -4,9 +4,6 @@ import jakarta.validation.constraints.Email;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-/**
- * TODO Sprint add-controllers.
- */
 @Data
 @RequiredArgsConstructor
 public class User {
