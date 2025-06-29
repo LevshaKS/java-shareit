@@ -21,7 +21,7 @@ public class BookingController {
     private final BookingService bookingService;
 
 
-    @PostMapping
+    @PostMapping  //создание запроса бронирования
     @ResponseStatus(HttpStatus.CREATED)
     public BookingDto createBooking(@Positive(message = "неверное значение") @RequestHeader("X-Sharer-User-Id") long userId,
                                     @Valid @RequestBody BookingDto bookingDto) {
@@ -30,34 +30,38 @@ public class BookingController {
     }
 
     @PatchMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.OK)  //Подтверждение или отклонение запроса на бронирование.
     public BookingDto updateBooking(@Positive(message = "неверное значение") @RequestHeader("X-Sharer-User-Id") long userId,
                                     @Positive(message = "неверное значение") @PathVariable("id") long id,
-                                    @Valid @RequestBody BookingDto bookingDto) {
+                                    @RequestParam() boolean approved) {
         log.info("обновление запроса бронирования");
-        return bookingService.updateBooking(userId, id, bookingDto);
+        return bookingService.updateBooking(userId, id, approved);
     }
 
-    @DeleteMapping("/{itemId}")
+    @GetMapping("/{id}")    //получение данных о конкрертном бронирование
     @ResponseStatus(HttpStatus.OK)
-    public void delBooking(@Positive(message = "неверное значение") @RequestHeader("X-Sharer-User-Id") long userId,
-                           @Positive(message = "неверное значение") @PathVariable("itemId") long itemId) {
-        log.info("удаление запроса бронирования");
-        bookingService.delBooking(userId, itemId);
-    }
-
-    @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public BookingDto getBookingById(@Positive(message = "неверное значение") @PathVariable("id") long id) {
+    public BookingDto getBookingById(@Positive(message = "неверное значение") @RequestHeader(value = "X-Sharer-User-Id", required = false) long userId,
+                                     @Positive(message = "неверное значение") @PathVariable("id") long id) {
         log.info("поиск запроса бронирования id" + id);
-        return bookingService.geyBookingById(id);
+        return bookingService.getBookingById(userId, id);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Collection<BookingDto> findAllBooking() {
+    public Collection<BookingDto> findAllBookingByUserId(
+            @Positive(message = "неверное значение") @RequestHeader("X-Sharer-User-Id") long userId,
+            @RequestParam(required = false, defaultValue = "ALL") String state) {
         log.info("вывод списка запросов бронирования");
-        return bookingService.findAllBooking();
+        return bookingService.findAllBookingByUserId(userId, state);
+    }
+
+    @GetMapping("/owner")
+    @ResponseStatus(HttpStatus.OK)
+    public Collection<BookingDto> findAllBookingByOwner(
+            @Positive(message = "неверное значение") @RequestHeader("X-Sharer-User-Id") long userId,
+            @RequestParam(required = false, defaultValue = "ALL") String state) {
+        log.info("вывод списка запросов бронирования");
+        return bookingService.findAllBookingByOwner(userId, state);
     }
 
 }

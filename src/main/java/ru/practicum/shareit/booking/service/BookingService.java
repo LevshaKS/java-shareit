@@ -8,14 +8,12 @@ public interface BookingService {
 
     BookingDto saveBooking(long userId, BookingDto bookingDto);
 
-    BookingDto updateBooking(long userId, long itemId, BookingDto bookingDto);
+    BookingDto updateBooking(long userId, long itemId, Boolean approved);
 
+    Collection<BookingDto> findAllBookingByUserId(long userId, String stat);
 
-    void delBooking(long userId, long itemId);
+    Collection<BookingDto> findAllBookingByOwner(long userId, String stat);
 
+    BookingDto getBookingById(long userId, long id);
 
-    BookingDto geyBookingById(long id);
-
-
-    Collection<BookingDto> findAllBooking();
 }
