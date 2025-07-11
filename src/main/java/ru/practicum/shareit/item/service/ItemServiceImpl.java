@@ -151,7 +151,8 @@ public class ItemServiceImpl implements ItemService {
         User user = userRepository.findById(userId).orElseThrow(() -> new ErrorIsNull("нет такого пользователя"));
         Item item = itemRepository.findById(id).orElseThrow(() -> new ErrorIsNull("нет такой вещи"));
 
-        Collection<Booking> bookingsPastInUser = bookingRepository.findPastByBooker_idOrderByTimeDesc(userId, LocalDateTime.now().toInstant(ZoneOffset.UTC));
+        Collection<Booking> bookingsPastInUser = bookingRepository.findPastByBooker_idOrderByTimeDesc(userId,
+                LocalDateTime.now().toInstant(ZoneOffset.UTC));
 
         Collection<Booking> itemBooking = bookingsPastInUser.stream()
                 .filter(booking -> booking.getItem().getId() == id).collect(Collectors.toSet());
@@ -193,8 +194,10 @@ public class ItemServiceImpl implements ItemService {
 
         Collection<Long> findItems = itemsDto.stream()
                 .map(ItemDto::getId).toList();  //список вещей вернушвиеся в запросе
-        Collection<Booking> futureBookings = bookingRepository.findFutureByItem_idTimeDesc(findItems, LocalDateTime.now().toInstant(ZoneOffset.UTC));
-        Collection<Booking> pastBookings = bookingRepository.findPastByItem_idTimeDesc(findItems, LocalDateTime.now().toInstant(ZoneOffset.UTC).minusSeconds(3));
+        Collection<Booking> futureBookings = bookingRepository.findFutureByItem_idTimeDesc(findItems,
+                LocalDateTime.now().toInstant(ZoneOffset.UTC));
+        Collection<Booking> pastBookings = bookingRepository.findPastByItem_idTimeDesc(findItems,
+                LocalDateTime.now().toInstant(ZoneOffset.UTC).minusSeconds(3)); // не знаю как решить проблему. при тестирование разница в пару секунд промежутка бронирования и запроса
         for (ItemDto itemDto : itemsDto) {
             Optional<Booking> pastBooking = pastBookings.stream()
                     .filter(booking -> booking.getItem().getId().equals(itemDto.getId()))

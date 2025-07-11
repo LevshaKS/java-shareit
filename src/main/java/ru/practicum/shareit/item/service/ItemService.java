@@ -19,5 +19,5 @@ public interface ItemService {
 
     Collection<ItemDto> findItemByName(String name);
 
-    CommentDto addComment (long id, long userId, CommentDto commentDto);
+    CommentDto addComment(long id, long userId, CommentDto commentDto);
 }
