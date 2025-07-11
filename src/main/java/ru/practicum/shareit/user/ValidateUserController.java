@@ -23,7 +23,7 @@ public class ValidateUserController {
             throw new NotDataException("name не может быть пустым");
         }
 
-        if (userRepository.findByEmail(userDto.getEmail()) != null) {
+        if (userRepository.findByEmail(userDto.getEmail()).isPresent()) {
             log.warn("такой email уже есть");
             throw new DuplicateDataException("такой email уже есть");
         }

@@ -47,18 +47,17 @@ public class ItemRequestController {
 
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
-    public Collection<ItemRequestDto> findItemRequestByDescription(@RequestParam String item) {
+    public ItemRequestDto findItemRequestByDescription(@RequestParam String item) {
         log.info("вывод запроса по названию вещи");
         return itemRequestService.findItemRequestByDescription(item);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Collection<ItemRequestDto> findByUser(@Positive(message = "неверное значение") @RequestHeader("X-Sharer-User-Id") long id) {
-        log.info("вывод всех запросов создания вещи пользователем");
-        return itemRequestService.findByUserId(id);
+    public Collection<ItemRequestDto> findAll() {
+        log.info("вывод всех запросов создания вещи");
+        return itemRequestService.findAll();
     }
-
 
     @DeleteMapping("/{itemId}")
     @ResponseStatus(HttpStatus.OK)
