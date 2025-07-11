@@ -2,6 +2,7 @@ package ru.practicum.shareit.request.service;
 
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 
+
 import java.util.Collection;
 
 public interface ItemRequestService {
@@ -12,10 +13,9 @@ public interface ItemRequestService {
 
     ItemRequestDto findIdItemRequestById(long id);
 
-    Collection<ItemRequestDto> findItemRequestByDescription(String description);
+    ItemRequestDto findItemRequestByDescription(String description);
 
-    Collection<ItemRequestDto> findByUserId(long id);
-
+    Collection<ItemRequestDto> findAll();
 
     void delete(long userId, long id);
 }
