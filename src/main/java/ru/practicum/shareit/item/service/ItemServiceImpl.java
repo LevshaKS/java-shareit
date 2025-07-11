@@ -197,7 +197,7 @@ public class ItemServiceImpl implements ItemService {
         Collection<Booking> futureBookings = bookingRepository.findFutureByItem_idTimeDesc(findItems,
                 timeNow);
         Collection<Booking> pastBookings = bookingRepository.findPastByItem_idTimeDesc(findItems,
-                timeNow.plusSeconds(3)); // не знаю как решить проблему. при тестирование разница в пару секунд промежутка бронирования и запроса
+                timeNow.plusSeconds(4)); // не знаю как решить проблему. при тестирование разница в пару секунд промежутка бронирования и запроса
         for (ItemDto itemDto : itemsDto) {
             Optional<Booking> pastBooking = pastBookings.stream()
                     .filter(booking -> booking.getItem().getId().equals(itemDto.getId()))
