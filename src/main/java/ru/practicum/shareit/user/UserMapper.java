@@ -17,7 +17,6 @@ public class UserMapper {
         return user;
     }
 
-
     public static UserDto mapToUserDto(User user) {
         UserDto userDto = new UserDto();
         userDto.setName(user.getName());
@@ -28,7 +27,6 @@ public class UserMapper {
 
     public static User mapToUserUpdate(long userId, UserDto userDto) {
         User user = new User();
-
         user.setName(userDto.getName());
         user.setEmail(userDto.getEmail());
         user.setId(userId);
