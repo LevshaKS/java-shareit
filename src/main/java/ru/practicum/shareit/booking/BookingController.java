@@ -47,7 +47,7 @@ public class BookingController {
     }
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.OK)  //список  всех бронирований текущег опользователя
     public Collection<BookingDto> findAllBookingByUserId(
             @Positive(message = "неверное значение") @RequestHeader("X-Sharer-User-Id") long userId,
             @RequestParam(required = false, defaultValue = "ALL") String state) {
@@ -56,7 +56,7 @@ public class BookingController {
     }
 
     @GetMapping("/owner")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.OK) //весь список вещей пользователя для бронирования
     public Collection<BookingDto> findAllBookingByOwner(
             @Positive(message = "неверное значение") @RequestHeader("X-Sharer-User-Id") long userId,
             @RequestParam(required = false, defaultValue = "ALL") String state) {

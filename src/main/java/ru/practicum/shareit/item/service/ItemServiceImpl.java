@@ -27,10 +27,7 @@ import ru.practicum.shareit.user.repository.UserRepository;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -191,13 +188,13 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private void setBookingDataPastAndFuture(Collection<ItemDto> itemsDto) {
-        Instant timeNow = LocalDateTime.now().toInstant(ZoneOffset.UTC);
+        final Instant timeNow = LocalDateTime.now().toInstant(ZoneOffset.UTC).plusSeconds(-3);  // не знаю как решить проблему. при тестирование разница в пару секунд промежутка бронирования и запроса
         Collection<Long> findItems = itemsDto.stream()
                 .map(ItemDto::getId).toList();  //список вещей вернушвиеся в запросе
         Collection<Booking> futureBookings = bookingRepository.findFutureByItem_idTimeDesc(findItems,
                 timeNow);
         Collection<Booking> pastBookings = bookingRepository.findPastByItem_idTimeDesc(findItems,
-                timeNow.plusSeconds(4)); // не знаю как решить проблему. при тестирование разница в пару секунд промежутка бронирования и запроса
+                timeNow);
         for (ItemDto itemDto : itemsDto) {
             Optional<Booking> pastBooking = pastBookings.stream()
                     .filter(booking -> booking.getItem().getId().equals(itemDto.getId()))
@@ -218,6 +215,9 @@ public class ItemServiceImpl implements ItemService {
 
         }
         log.info("добавляем последнее и ближайшее бронирование");
+        System.out.println(timeNow);
+        System.out.println("_______________________________");
     }
 
 }
+
