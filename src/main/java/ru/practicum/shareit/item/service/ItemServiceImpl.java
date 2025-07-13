@@ -188,16 +188,15 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private void setBookingDataPastAndFuture(Collection<ItemDto> itemsDto) {
-        final Instant timeNow = LocalDateTime.now().toInstant(ZoneOffset.UTC).minusSeconds(3);  // не знаю как решить проблему. при тестирование разница в пару секунд промежутка бронирования и запроса
+        final Instant timeNow = LocalDateTime.now().toInstant(ZoneOffset.UTC).minusSeconds(4);  // не знаю как решить проблему. при тестирование разница в пару секунд промежутка бронирования и запроса
         Collection<Long> findItems = itemsDto.stream()
                 .map(ItemDto::getId).toList();  //список вещей вернушвиеся в запросе
-        System.out.println("-----------текущее время-----------");
-        System.out.println(timeNow);
-
         Collection<Booking> futureBookings = bookingRepository.findFutureByItem_idTimeDesc(findItems,
                 timeNow);
         Collection<Booking> pastBookings = bookingRepository.findPastByItem_idTimeDesc(findItems,
                 timeNow);
+        System.out.println("-----------текущее время-----------");
+        System.out.println(timeNow);
         for (ItemDto itemDto : itemsDto) {
             Optional<Booking> pastBooking = pastBookings.stream()
                     .filter(booking -> booking.getItem().getId().equals(itemDto.getId()))
