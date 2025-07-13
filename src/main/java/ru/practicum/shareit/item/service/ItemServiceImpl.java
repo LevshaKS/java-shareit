@@ -134,7 +134,7 @@ public class ItemServiceImpl implements ItemService {
         System.out.println(name);
         if (name.isEmpty() || name.isBlank()) {
             log.warn("передан пустой запрос поиска");
-            return new ArrayList<ItemDto>();
+            return new ArrayList<>();
         }
         log.info("передан запрос поиска вещей по названию " + name.toLowerCase());
         return itemRepository.findByNameContainingIgnoreCaseAndAvailable(name, true).stream()
@@ -188,9 +188,12 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private void setBookingDataPastAndFuture(Collection<ItemDto> itemsDto) {
-        final Instant timeNow = LocalDateTime.now().toInstant(ZoneOffset.UTC).plusSeconds(-3);  // не знаю как решить проблему. при тестирование разница в пару секунд промежутка бронирования и запроса
+        final Instant timeNow = LocalDateTime.now().toInstant(ZoneOffset.UTC).minusSeconds(2);  // не знаю как решить проблему. при тестирование разница в пару секунд промежутка бронирования и запроса
         Collection<Long> findItems = itemsDto.stream()
                 .map(ItemDto::getId).toList();  //список вещей вернушвиеся в запросе
+        System.out.println("-----------текущее время-----------");
+        System.out.println(timeNow);
+
         Collection<Booking> futureBookings = bookingRepository.findFutureByItem_idTimeDesc(findItems,
                 timeNow);
         Collection<Booking> pastBookings = bookingRepository.findPastByItem_idTimeDesc(findItems,
@@ -215,8 +218,6 @@ public class ItemServiceImpl implements ItemService {
 
         }
         log.info("добавляем последнее и ближайшее бронирование");
-        System.out.println(timeNow);
-        System.out.println("_______________________________");
     }
 
 }

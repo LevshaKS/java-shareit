@@ -6,8 +6,6 @@ import lombok.Setter;
 import lombok.ToString;
 import ru.practicum.shareit.user.model.User;
 
-import java.util.Objects;
-
 @Entity
 @Getter
 @Setter
@@ -34,16 +32,5 @@ public class Item {
     @Column(name = "request_id")
     private long request;
 
-    @Override
-    public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
-        Item item = (Item) object;
-        return Objects.equals(id, item.id);
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 }
