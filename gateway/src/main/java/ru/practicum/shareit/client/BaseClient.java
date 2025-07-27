@@ -28,7 +28,7 @@ public class BaseClient {
     }
 
     protected ResponseEntity<Object> get(String path, long itemId, long userId) {
-       return get(path+itemId, itemId, null);
+       return get(path, itemId, null);
     }
 
     protected <T> ResponseEntity<Object> post(String path, T body) {
