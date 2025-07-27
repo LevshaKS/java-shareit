@@ -65,7 +65,7 @@ public class ItemClient extends BaseClient {
 
     public ResponseEntity<Object> createComment(long itemId, long userId, CommentDto commentDto) {
         log.info("клиент - получение всего списка");
-        return post("/" + itemId + "/comment", itemId, userId, commentDto);
+        return post("/" + itemId + "/comment", userId, commentDto);
     }
 
 }

@@ -28,7 +28,7 @@ public class BaseClient {
     }
 
     protected ResponseEntity<Object> get(String path, long itemId, long userId) {
-        return get(path, itemId, userId);
+       return get(path+itemId, itemId, null);
     }
 
     protected <T> ResponseEntity<Object> post(String path, T body) {
@@ -40,7 +40,7 @@ public class BaseClient {
     }
 
     protected <T> ResponseEntity<Object> post(String path, long id, long userId, T body) {
-        return post(path, id, userId, body);
+        return post(path, userId, body);
     }
 
     protected <T> ResponseEntity<Object> post(String path, Long userId, @Nullable Map<String, Object> parameters, T body) {
