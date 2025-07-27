@@ -1,0 +1,71 @@
+package ru.practicum.shareit.item.client;
+
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.web.util.DefaultUriBuilderFactory;
+import ru.practicum.shareit.client.BaseClient;
+import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.item.dto.ItemDto;
+
+import java.util.Map;
+
+
+@Slf4j
+@Service
+public class ItemClient extends BaseClient {
+    private static final String API_PREFIX = "/items";
+
+    @Autowired
+    public ItemClient(@Value("${shareit-server.url}") String serverUrl, RestTemplateBuilder builder) {
+        super(
+                builder
+                        .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + API_PREFIX))
+                        .requestFactory(() -> new HttpComponentsClientHttpRequestFactory())
+                        .build()
+        );
+    }
+
+
+    public ResponseEntity<Object> createItem(long userId, ItemDto itemDto) {
+        log.info("клиент - создание - вещи");
+        return post("", userId, itemDto);
+    }
+
+    public ResponseEntity<Object> updateItem(long userId, long itemId, ItemDto itemDto) {
+        log.info("клиент - обновление - вещи");
+        return patch("/" + itemId, userId, itemDto);
+    }
+
+    public ResponseEntity<Object> getItemById(long itemId) {
+        log.info("клиент - получение вещи");
+        return get("/" + itemId);
+    }
+
+    public ResponseEntity<Object> searchItemByName(String text) {
+        log.info("клиент - запрос поиска вещи по name");
+        Map<String, Object> parameters = Map.of("text", text);
+        return get("/search?text={text}", null, parameters);
+    }
+
+    public ResponseEntity<Object> delItem(long itemId, long userId) {
+        log.info("клиент - удаление вещи");
+        return delete("/" + itemId, userId);
+    }
+
+    public ResponseEntity<Object> getItemByUserID(long userId) {
+        log.info("клиент - запрос вещей у пользователя по id");
+        return get("", userId);
+    }
+
+    public ResponseEntity<Object> createComment(long itemId, long userId, CommentDto commentDto) {
+        log.info("клиент - получение всего списка");
+        return post("/" + itemId + "/comment", itemId, userId, commentDto);
+    }
+
+}
