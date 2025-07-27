@@ -3,7 +3,6 @@ package ru.practicum.shareit.comment.dto;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import ru.practicum.shareit.comment.model.Comment;
-import ru.practicum.shareit.item.dto.ItemMapper;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CommentMapper {
