@@ -108,7 +108,6 @@ class UserServiceImplTest {
         assertEquals(user.getName(), result.getName(), "имя должно совпадать");
         assertEquals(user.getEmail(), result.getEmail(), "емайл должно совпадать");
 
-
         verify(userRepository, times(1)).findById(anyLong());
 
     }
@@ -133,4 +132,22 @@ class UserServiceImplTest {
     }
 
 
+    @Test
+    void deleteUser() {
+        long userId = 1L;
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        doNothing().when(userRepository).deleteById(userId);
+        userService.deleteUser(userId);
+        verify(userRepository, times(1)).deleteById(userId);
+    }
+
+    @Test
+    void deleteUserNotFound() {
+        long userId = 2L;
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+        assertThrows(NotDataException.class, () -> {
+            userService.deleteUser(userId);
+        });
+        verify(userRepository, never()).deleteById(any());
+    }
 }

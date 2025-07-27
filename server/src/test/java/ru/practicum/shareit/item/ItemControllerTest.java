@@ -166,4 +166,13 @@ class ItemControllerTest {
         verify(itemService, times(1)).addComment(anyLong(), anyLong(), any());
 
     }
+
+    @Test
+    void delItem() throws Exception {
+        mvc.perform(delete("/items/{itemId}", itemId)
+                .accept(MediaType.APPLICATION_JSON)
+                .header("X-Sharer-User-Id", userId))
+                .andExpect(status().isOk());
+            verify(itemService, times(1)).deleteItem(userId,itemId);
+    }
 }

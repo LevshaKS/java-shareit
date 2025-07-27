@@ -171,6 +171,7 @@ public class ItemServiceImplTest {
         verify(itemRepository, times(1)).findByUserId(anyLong());
     }
 
+
     @Test
     void findItemByName() {
 
@@ -181,6 +182,25 @@ public class ItemServiceImplTest {
         itemDto.setId(1L);
         assertEquals(itemDto, Arrays.stream(result.toArray()).toList().get(0), "descriptopn должно совпадать");
         verify(itemRepository, times(1)).findByNameContainingIgnoreCaseAndAvailable(anyString(), anyBoolean());
+    }
+
+    @Test
+    void deleteItem() {
+        long userId = 1;
+        when(itemRepository.findById(id)).thenReturn(Optional.of(item));
+        doNothing().when(itemRepository).deleteByUserIdAndId(userId, id);
+        itemService.deleteItem(userId, id);
+        verify(itemRepository, times(1)).deleteByUserIdAndId(userId, id);
+    }
+
+    @Test
+    void deleteItemNotFound() {
+        long id = 2L;
+        when(itemRepository.findById(id)).thenReturn(Optional.empty());
+        assertThrows(ErrorIsNull.class, () -> {
+            itemService.deleteItem(userId, id);
+        });
+        verify(itemRepository, never()).deleteByUserIdAndId(anyLong(), anyLong());
     }
 
     @Test
@@ -219,7 +239,6 @@ public class ItemServiceImplTest {
         assertNotNull(result);
 
         verify(commentRepository).save(any(Comment.class));
-
 
     }
 

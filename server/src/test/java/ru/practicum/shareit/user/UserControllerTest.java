@@ -104,4 +104,11 @@ public class UserControllerTest {
 
         verify(userService, times(1)).updateUser(anyLong(), any());
     }
+
+    @Test
+    void delUser() throws Exception {
+        mvc.perform(delete("/users/{userId}", userId))
+                .andExpect(status().isOk());
+        verify(userService, times(1)).deleteUser(userId);
+    }
 }
