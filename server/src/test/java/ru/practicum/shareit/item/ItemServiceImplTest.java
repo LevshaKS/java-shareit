@@ -160,7 +160,7 @@ public class ItemServiceImplTest {
 
     @Test
     void getAllItemByUserId() {
-        when(itemRepository.findById(anyLong())).thenReturn(Optional.of(item));
+        lenient().when(itemRepository.findById(anyLong())).thenReturn(Optional.of(item));
         when(itemRepository.findByUserId(anyLong())).thenReturn(Arrays.asList(item));
 
         Collection<ItemDto> result = itemService.getAllItemByUserId(1L);
@@ -209,9 +209,9 @@ public class ItemServiceImplTest {
         booking.setStatus(Status.APPROVED);
 
         lenient().when(bookingRepository.findById(anyLong())).thenReturn(Optional.of(booking));
-        lenient().when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
-        lenient().when(itemRepository.findById(anyLong())).thenReturn(Optional.of(item));
-        lenient().when(bookingRepository.findPastByBooker_idOrderByTimeDesc(anyLong(), any())).thenReturn(Arrays.asList(booking));
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
+        when(itemRepository.findById(anyLong())).thenReturn(Optional.of(item));
+        when(bookingRepository.findPastByBooker_idOrderByTimeDesc(anyLong(), any())).thenReturn(Arrays.asList(booking));
 
         when(commentRepository.save(any(Comment.class))).thenReturn(comment);
 
