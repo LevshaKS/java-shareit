@@ -15,7 +15,7 @@ import java.util.Collection;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@DataJpaTest (properties = {"spring.datasource.url=jdbc:h2:mem:testdb1"})
+@DataJpaTest(properties = {"spring.datasource.url=jdbc:h2:mem:testdb1"})
 public class ItemRepositoryTest {
 
     private Item item, item2;
@@ -25,6 +25,7 @@ public class ItemRepositoryTest {
     private User user;
     @Autowired
     private ItemRepository itemRepository;
+
     @BeforeEach
     void setUp() {
         user = new User();
@@ -32,14 +33,14 @@ public class ItemRepositoryTest {
         user.setEmail("name@test.ru");
         userRepository.save(user);
 
-       item = new Item();
-       item.setName("test1");
-       item.setAvailable(true);
-       item.setDescription("testtest");
-       item.setUser(user);
+        item = new Item();
+        item.setName("test1");
+        item.setAvailable(true);
+        item.setDescription("testtest");
+        item.setUser(user);
 
 
-       item2 = new Item();
+        item2 = new Item();
         item2.setName("test2");
         item2.setAvailable(true);
         item2.setDescription("testtest2");
@@ -54,7 +55,7 @@ public class ItemRepositoryTest {
     }
 
     @Test
-    void saveItem (){
+    void saveItem() {
         itemRepository.save(item);
         Item saveItem = itemRepository.findById(1L).orElse(null);
         assertNotNull(saveItem);
@@ -62,32 +63,32 @@ public class ItemRepositoryTest {
     }
 
     @Test
-    void updateItem (){
+    void updateItem() {
         itemRepository.save(item);
         System.out.println(item);
         Item saveItem = itemRepository.findById(4L).orElse(null);
         System.out.println(saveItem);
-       saveItem.setName("newName");
+        saveItem.setName("newName");
         itemRepository.save(saveItem);
-       Item saveItemNew = itemRepository.findById(4L).orElse(null);
+        Item saveItemNew = itemRepository.findById(4L).orElse(null);
         assertNotNull(saveItemNew);
         assertEquals(saveItem.getName(), saveItemNew.getName());
     }
 
     @Test
-    void findById (){
+    void findById() {
         itemRepository.save(item);
         System.out.println(item);
         Item saveItem = itemRepository.findById(3L).orElse(null);
         System.out.println(saveItem);
-         assertNotNull(saveItem);
+        assertNotNull(saveItem);
         assertEquals(saveItem.getName(), item.getName());
     }
 
     @Test
-    void findByRequest_id (){
+    void findByRequest_id() {
         userRepository.save(user);
-            itemRepository.save(item);
+        itemRepository.save(item);
         System.out.println(item);
         System.out.println(user);
         Collection<Item> saveItem = itemRepository.findByUserId(2L);
