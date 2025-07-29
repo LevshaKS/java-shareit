@@ -157,7 +157,7 @@ public class BookingServiceImplTest {
     }
 
     @Test
-    void findAllBookingByUserId() {
+    void findAllBookingByUserIdAll() {
         lenient().when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
         when(bookingRepository.findByBookerIdOrderByStartDesc(anyLong())).thenReturn(Arrays.asList(booking));
 
@@ -172,7 +172,85 @@ public class BookingServiceImplTest {
     }
 
     @Test
-    void findAllBookingByOwner() {
+    void findAllBookingByUserIdWaiting() {
+        lenient().when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
+        when(bookingRepository.findByBookerIdAndStatusOrderByStartDesc(anyLong(), eq(Status.WAITING))).thenReturn(Arrays.asList(booking));
+
+
+        Collection<BookingDto> result = bookingService.findAllBookingByUserId(user.getId(), "WAITING");
+        bookingDto.setId(1L);
+
+        assertNotNull(result, "не должен быть пустым");
+        assertEquals(bookingDto, Arrays.stream(result.toArray()).toList().get(0), " должно совпадать");
+
+        verify(bookingRepository, times(1)).findByBookerIdAndStatusOrderByStartDesc(id, (Status.WAITING));
+    }
+
+
+    @Test
+    void findAllBookingByUserIdRejected() {
+        lenient().when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
+        when(bookingRepository.findByBookerIdAndStatusOrderByStartDesc(anyLong(), eq(Status.REJECTED))).thenReturn(Arrays.asList(booking));
+
+
+        Collection<BookingDto> result = bookingService.findAllBookingByUserId(user.getId(), "REJECTED");
+        bookingDto.setId(1L);
+
+        assertNotNull(result, "не должен быть пустым");
+        assertEquals(bookingDto, Arrays.stream(result.toArray()).toList().get(0), " должно совпадать");
+
+        verify(bookingRepository, times(1)).findByBookerIdAndStatusOrderByStartDesc(id, (Status.REJECTED));
+    }
+
+    @Test
+    void findAllBookingByUserIdCurrent() {
+        lenient().when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
+        when(bookingRepository.findCurrentByBooker_idOrderByTimeDesc(anyLong(), any(Instant.class), any(Instant.class))).thenReturn(Arrays.asList(booking));
+
+        Collection<BookingDto> result = bookingService.findAllBookingByUserId(user.getId(), "CURRENT");
+        bookingDto.setId(1L);
+
+        assertNotNull(result, "не должен быть пустым");
+        assertEquals(bookingDto, Arrays.stream(result.toArray()).toList().get(0), " должно совпадать");
+        verify(bookingRepository, times(1)).findCurrentByBooker_idOrderByTimeDesc(eq(id), any(Instant.class), any(Instant.class));
+    }
+
+    @Test
+    void findAllBookingByUserIdPast() {
+        lenient().when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
+        when(bookingRepository.findPastByBooker_idOrderByTimeDesc(anyLong(), any(Instant.class))).thenReturn(Arrays.asList(booking));
+
+        Collection<BookingDto> result = bookingService.findAllBookingByUserId(user.getId(), "PAST");
+        bookingDto.setId(1L);
+
+        assertNotNull(result, "не должен быть пустым");
+        assertEquals(bookingDto, Arrays.stream(result.toArray()).toList().get(0), " должно совпадать");
+        verify(bookingRepository, times(1)).findPastByBooker_idOrderByTimeDesc(eq(id), any(Instant.class));
+    }
+
+    @Test
+    void findAllBookingByUserIdFuture() {
+        lenient().when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
+        when(bookingRepository.findFutureByBooker_idOrderByTimeDesc(anyLong(), any(Instant.class))).thenReturn(Arrays.asList(booking));
+
+        Collection<BookingDto> result = bookingService.findAllBookingByUserId(user.getId(), "FUTURE");
+        bookingDto.setId(1L);
+
+        assertNotNull(result, "не должен быть пустым");
+        assertEquals(bookingDto, Arrays.stream(result.toArray()).toList().get(0), " должно совпадать");
+        verify(bookingRepository, times(1)).findFutureByBooker_idOrderByTimeDesc(eq(id), any(Instant.class));
+    }
+
+    @Test
+    void findAllBookingByUserIdIsNull() {
+        assertThrows(NotDataException.class, () -> {
+            bookingService.findAllBookingByUserId(user.getId(), null);
+            ;
+        });
+    }
+
+    @Test
+    void findAllBookingByOwnerAll() {
         lenient().when(itemRepository.findByUserId(anyLong())).thenReturn(Arrays.asList(item));
         lenient().when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
         when(bookingRepository.findDistinctByItemIdInOrderByStartDesc(anyCollection())).thenReturn(Arrays.asList(booking));
@@ -186,5 +264,87 @@ public class BookingServiceImplTest {
         verify(bookingRepository, times(1)).findDistinctByItemIdInOrderByStartDesc(anyCollection());
     }
 
+    @Test
+    void findAllBookingByOwnerWaiting() {
+        lenient().when(itemRepository.findByUserId(anyLong())).thenReturn(Arrays.asList(item));
+        lenient().when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
+        when(bookingRepository.findDistinctByItem_idInAndStatusOrderByStart_dateDesc(anyCollection(), eq(Status.WAITING))).thenReturn(Arrays.asList(booking));
+
+        Collection<BookingDto> result = bookingService.findAllBookingByOwner(user.getId(), "WAITING");
+        bookingDto.setId(1L);
+
+        assertNotNull(result, "не должен быть пустым");
+        assertEquals(bookingDto, Arrays.stream(result.toArray()).toList().get(0), " должно совпадать");
+
+        verify(bookingRepository, times(1)).findDistinctByItem_idInAndStatusOrderByStart_dateDesc(anyCollection(), eq(Status.WAITING));
+    }
+
+    @Test
+    void findAllBookingByOwnerRejected() {
+        lenient().when(itemRepository.findByUserId(anyLong())).thenReturn(Arrays.asList(item));
+        lenient().when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
+        when(bookingRepository.findDistinctByItem_idInAndStatusOrderByStart_dateDesc(anyCollection(), eq(Status.REJECTED))).thenReturn(Arrays.asList(booking));
+
+        Collection<BookingDto> result = bookingService.findAllBookingByOwner(user.getId(), "REJECTED");
+        bookingDto.setId(1L);
+
+        assertNotNull(result, "не должен быть пустым");
+        assertEquals(bookingDto, Arrays.stream(result.toArray()).toList().get(0), " должно совпадать");
+
+        verify(bookingRepository, times(1)).findDistinctByItem_idInAndStatusOrderByStart_dateDesc(anyCollection(), eq(Status.REJECTED));
+    }
+
+    @Test
+    void findAllBookingByOwnerCurrent() {
+        lenient().when(itemRepository.findByUserId(anyLong())).thenReturn(Arrays.asList(item));
+        lenient().when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
+        when(bookingRepository.findCurrentByItem_idTimeDesc(anyCollection(), any(Instant.class), any(Instant.class))).thenReturn(Arrays.asList(booking));
+
+        Collection<BookingDto> result = bookingService.findAllBookingByOwner(user.getId(), "CURRENT");
+        bookingDto.setId(1L);
+
+        assertNotNull(result, "не должен быть пустым");
+        assertEquals(bookingDto, Arrays.stream(result.toArray()).toList().get(0), " должно совпадать");
+
+        verify(bookingRepository, times(1)).findCurrentByItem_idTimeDesc(anyCollection(), any(Instant.class), any(Instant.class));
+    }
+
+    @Test
+    void findAllBookingByOwnerPast() {
+        lenient().when(itemRepository.findByUserId(anyLong())).thenReturn(Arrays.asList(item));
+        lenient().when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
+        when(bookingRepository.findPastByItem_idTimeDesc(anyCollection(), any(Instant.class))).thenReturn(Arrays.asList(booking));
+
+        Collection<BookingDto> result = bookingService.findAllBookingByOwner(user.getId(), "PAST");
+        bookingDto.setId(1L);
+
+        assertNotNull(result, "не должен быть пустым");
+        assertEquals(bookingDto, Arrays.stream(result.toArray()).toList().get(0), " должно совпадать");
+
+        verify(bookingRepository, times(1)).findPastByItem_idTimeDesc(anyCollection(), any(Instant.class));
+    }
+
+    @Test
+    void findAllBookingByOwnerFuture() {
+        lenient().when(itemRepository.findByUserId(anyLong())).thenReturn(Arrays.asList(item));
+        lenient().when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
+        when(bookingRepository.findFutureByItem_idTimeDesc(anyCollection(), any(Instant.class))).thenReturn(Arrays.asList(booking));
+
+        Collection<BookingDto> result = bookingService.findAllBookingByOwner(user.getId(), "FUTURE");
+        bookingDto.setId(1L);
+
+        assertNotNull(result, "не должен быть пустым");
+        assertEquals(bookingDto, Arrays.stream(result.toArray()).toList().get(0), " должно совпадать");
+
+        verify(bookingRepository, times(1)).findFutureByItem_idTimeDesc(anyCollection(), any(Instant.class));
+    }
+
+    @Test
+    void findAllBookingByOwnerIsNull() {
+        assertThrows(NotDataException.class, () -> {
+            bookingService.findAllBookingByOwner(user.getId(), null);
+            ;
+        });
+    }
 
 }
