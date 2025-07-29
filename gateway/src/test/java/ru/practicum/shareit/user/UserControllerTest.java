@@ -64,7 +64,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.name").value("test"))
                 .andExpect(jsonPath("$.email").value("test@test.ru"));
 
-        verify(userClient, times(1)).createUser(any());
+        verify(userClient, times(1)).createUser(userDto);
     }
 
     @Test
@@ -79,7 +79,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.name").value("test"))
                 .andExpect(jsonPath("$.email").value("test@test.ru"));
 
-        verify(userClient, times(1)).getUserId(anyLong());
+        verify(userClient, times(1)).getUserId(userId);
     }
 
     @Test
@@ -110,7 +110,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.name").value("test2"))
                 .andExpect(jsonPath("$.email").value("test@test.ru"));
 
-        verify(userClient, times(1)).updateUser(anyLong(), any());
+        verify(userClient, times(1)).updateUser(userId, userDto);
     }
 
 
@@ -120,7 +120,8 @@ class UserControllerTest {
 
         mvc.perform(delete("/users/{id}", userId))
                 .andExpect(status().isOk());
-        verify(userClient, times(1)).delUser(anyLong());
+
+        verify(userClient, times(1)).delUser(userId);
     }
 
 }

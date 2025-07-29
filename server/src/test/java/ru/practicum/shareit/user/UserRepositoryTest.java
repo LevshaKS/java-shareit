@@ -34,14 +34,15 @@ public class UserRepositoryTest {
     @AfterEach
     public void tearDown() {
 
-        userRepository.delete(user);
-        userRepository.delete(user2);
+        userRepository.deleteAll();
+
     }
 
     @Test
     public void saveUser() {
         userRepository.save(user);
         User userSave = userRepository.findById(1L).orElse(null);
+
         assertNotNull(userSave);
         assertEquals(user.getName(), userSave.getName());
 
@@ -54,6 +55,7 @@ public class UserRepositoryTest {
         userSave.setName("newName");
         userRepository.save(userSave);
         User userSaveNew = userRepository.findById(2L).orElse(null);
+
         assertNotNull(userSaveNew);
         assertEquals(userSave.getName(), userSaveNew.getName());
     }
@@ -62,6 +64,7 @@ public class UserRepositoryTest {
     public void findByIdUser() {
         userRepository.save(user);
         User userSave = userRepository.findById(5L).orElse(null);
+
         assertNotNull(userSave);
         assertEquals(userSave.getName(), user.getName());
     }
@@ -71,6 +74,7 @@ public class UserRepositoryTest {
         userRepository.save(user);
         userRepository.save(user2);
         List<User> userAll = userRepository.findAll();
+
         assertNotNull(userAll);
         assertEquals(userAll.size(), 2);
         assertEquals(userAll.get(1).getName(), user2.getName());
@@ -81,11 +85,13 @@ public class UserRepositoryTest {
         userRepository.save(user);
         userRepository.save(user2);
         List<User> userAll = userRepository.findAll();
+
         assertNotNull(userAll);
         assertEquals(userAll.size(), 2);
-        System.out.println(userAll);
+
         userRepository.deleteById(7);
         userAll = userRepository.findAll();
+
         assertEquals(userAll.size(), 1);
     }
 }

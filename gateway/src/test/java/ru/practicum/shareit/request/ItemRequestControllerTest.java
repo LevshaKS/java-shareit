@@ -65,7 +65,8 @@ public class ItemRequestControllerTest {
                 .andExpect(jsonPath("$.id").value(id))
                 .andExpect(jsonPath("$.description").value("test"))
                 .andExpect(jsonPath("$.requester").value(userId));
-        verify(itemRequestClient, times(1)).createItemRequest(anyLong(), any());
+
+        verify(itemRequestClient, times(1)).createItemRequest(userId, itemRequestDto);
     }
 
     @Test
@@ -80,7 +81,8 @@ public class ItemRequestControllerTest {
                 .andExpect(jsonPath("$.id").value(id))
                 .andExpect(jsonPath("$.description").value("test"))
                 .andExpect(jsonPath("$.requester").value(userId));
-        verify(itemRequestClient, times(1)).findIdItemRequestById(anyLong(), anyLong());
+
+        verify(itemRequestClient, times(1)).findIdItemRequestById(id,userId);
     }
 
     @Test
@@ -95,7 +97,8 @@ public class ItemRequestControllerTest {
                 .andExpect(jsonPath("$[0].id").value(id))
                 .andExpect(jsonPath("$[0].description").value("test"))
                 .andExpect(jsonPath("$[0].requester").value(userId));
-        verify(itemRequestClient, times(1)).findByUser(anyLong());
+
+        verify(itemRequestClient, times(1)).findByUser(userId);
     }
 
     @Test
@@ -110,7 +113,8 @@ public class ItemRequestControllerTest {
                 .andExpect(jsonPath("$[0].id").value(id))
                 .andExpect(jsonPath("$[0].description").value("test"))
                 .andExpect(jsonPath("$[0].requester").value(userId));
-        verify(itemRequestClient, times(1)).findByAlLUser(anyLong());
+
+        verify(itemRequestClient, times(1)).findByAlLUser(userId);
     }
 
 }

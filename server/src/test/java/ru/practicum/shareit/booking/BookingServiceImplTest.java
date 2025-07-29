@@ -137,19 +137,23 @@ public class BookingServiceImplTest {
         when(bookingRepository.findById(anyLong())).thenReturn((Optional.of(booking)));
 
         BookingDto result = bookingService.getBookingById(user.getId(), id);
+
         assertNotNull(result, "не должен быть пустым");
         assertEquals(booking.getId(), result.getId(), "id должно совпадать");
         assertEquals(booking.getBooker(), result.getBooker(), "имя должно совпадать");
         assertEquals(booking.getItem(), result.getItem(), "descriptopn должно совпадать");
         assertEquals(booking.getStatus(), result.getStatus(), "available должно совпадать");
-        verify(bookingRepository).findById(anyLong());
+
+        verify(bookingRepository).findById(id);
     }
 
     @Test
     void getBookingByIdIsNotDataException() {
         when(bookingRepository.findById(anyLong())).thenReturn((Optional.empty()));
+
         assertThrows(NotDataException.class, () -> bookingService.getBookingById(user.getId(), id), "должна быть ошибка не найден id");
-        verify(bookingRepository, times(1)).findById(anyLong());
+
+        verify(bookingRepository, times(1)).findById(id);
     }
 
     @Test
@@ -160,9 +164,11 @@ public class BookingServiceImplTest {
 
         Collection<BookingDto> result = bookingService.findAllBookingByUserId(user.getId(), "ALL");
         bookingDto.setId(1L);
+
         assertNotNull(result, "не должен быть пустым");
         assertEquals(bookingDto, Arrays.stream(result.toArray()).toList().get(0), " должно совпадать");
-        verify(bookingRepository, times(1)).findByBookerIdOrderByStartDesc(anyLong());
+
+        verify(bookingRepository, times(1)).findByBookerIdOrderByStartDesc(id);
     }
 
     @Test
@@ -173,8 +179,10 @@ public class BookingServiceImplTest {
 
         Collection<BookingDto> result = bookingService.findAllBookingByOwner(user.getId(), "ALL");
         bookingDto.setId(1L);
+
         assertNotNull(result, "не должен быть пустым");
         assertEquals(bookingDto, Arrays.stream(result.toArray()).toList().get(0), " должно совпадать");
+
         verify(bookingRepository, times(1)).findDistinctByItemIdInOrderByStartDesc(anyCollection());
     }
 

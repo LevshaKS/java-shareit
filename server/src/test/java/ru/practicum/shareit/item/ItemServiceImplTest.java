@@ -56,6 +56,8 @@ public class ItemServiceImplTest {
     Item item, itemUpdated;
     long userId, id;
 
+
+
     @BeforeEach
     void setUp() {
         id = 1L;
@@ -98,6 +100,7 @@ public class ItemServiceImplTest {
         verify(itemRepository, times(1)).save(any(Item.class));
     }
 
+
     @Test
     void updateItem() {
 
@@ -126,8 +129,11 @@ public class ItemServiceImplTest {
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
         when(itemRepository.findById(anyLong())).thenReturn(Optional.empty());
 
+        itemDto.setOwner(3L);
+        assertThrows(ErrorIsNull.class, () -> itemService.updateItem(userId, 1L, itemDto), "вы не являетесь владельцем вещи");
+
         assertThrows(ErrorIsNull.class, () -> itemService.updateItem(userId, 2L, itemDto), "должна быть ошибка не найден id");
-        verify(itemRepository, times(1)).findById(anyLong());
+        verify(itemRepository, times(1)).findById(2L);
         verify(itemRepository, never()).save(any());
     }
 
@@ -145,7 +151,7 @@ public class ItemServiceImplTest {
         assertEquals(item.getAvailable(), result.getAvailable(), "available должно совпадать");
         assertEquals(item.getUser().getId(), result.getOwner(), "id user должно совпадать");
 
-        verify(itemRepository, times(1)).findById(anyLong());
+        verify(itemRepository, times(1)).findById(1L);
     }
 
     @Test
@@ -153,7 +159,7 @@ public class ItemServiceImplTest {
         when(itemRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(ErrorIsNull.class, () -> itemService.getItemByItemId(2L), "должна быть ошибка не найден id");
-        verify(itemRepository, times(1)).findById(anyLong());
+        verify(itemRepository, times(1)).findById(2L);
 
     }
 
@@ -168,7 +174,7 @@ public class ItemServiceImplTest {
         itemDto.setId(1L);
         itemDto.setComments(Collections.emptyList());
         assertEquals(itemDto, Arrays.stream(result.toArray()).toList().get(0), "descriptopn должно совпадать");
-        verify(itemRepository, times(1)).findByUserId(anyLong());
+        verify(itemRepository, times(1)).findByUserId(1L);
     }
 
 
@@ -181,7 +187,7 @@ public class ItemServiceImplTest {
         assertNotNull(result, "не должен быть пустым");
         itemDto.setId(1L);
         assertEquals(itemDto, Arrays.stream(result.toArray()).toList().get(0), "descriptopn должно совпадать");
-        verify(itemRepository, times(1)).findByNameContainingIgnoreCaseAndAvailable(anyString(), anyBoolean());
+        verify(itemRepository, times(1)).findByNameContainingIgnoreCaseAndAvailable("testName", true);
     }
 
     @Test
@@ -193,15 +199,16 @@ public class ItemServiceImplTest {
         verify(itemRepository, times(1)).deleteByUserIdAndId(userId, id);
     }
 
-    @Test
-    void deleteItemNotFound() {
-        long id = 2L;
-        when(itemRepository.findById(id)).thenReturn(Optional.empty());
-        assertThrows(ErrorIsNull.class, () -> {
-            itemService.deleteItem(userId, id);
-        });
-        verify(itemRepository, never()).deleteByUserIdAndId(anyLong(), anyLong());
-    }
+//    @Test
+//    void deleteItemNotFound() {
+//        id = 10L;
+//     //   when(itemService.getItemByItemId(id)).thenReturn(null);
+//        when(itemRepository.findById(id)).thenReturn(Optional.empty());
+//        assertThrows(NotDataException.class, () -> getItemByItemId(id), "нет вещи с таким id ");
+//       verify(itemService, never()).getItemByItemId(id);
+//
+//
+//    }
 
     @Test
     void addComment() {

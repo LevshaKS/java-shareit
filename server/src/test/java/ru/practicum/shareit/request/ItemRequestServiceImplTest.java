@@ -105,7 +105,8 @@ public class ItemRequestServiceImplTest {
         assertNotNull(result, "не должен быть пустым");
         itemRequestDto.setId(1L);
         assertEquals(itemRequestDto, Arrays.stream(result.toArray()).toList().get(0), "id должно совпадать");
-        verify(itemRequestRepository, times(1)).findAllByRequesterId(anyLong());
+
+        verify(itemRequestRepository, times(1)).findAllByRequesterId(id);
     }
 
     @Test
@@ -125,7 +126,8 @@ public class ItemRequestServiceImplTest {
         itemRequestDto.setDescription("testDescription2");
 
         assertEquals(itemRequestDto, Arrays.stream(result.toArray()).toList().get(0), "id должно совпадать");
-        verify(itemRequestRepository, times(1)).findByRequesterIdNotOrderByCreatedDesc(anyLong());
+
+        verify(itemRequestRepository, times(1)).findByRequesterIdNotOrderByCreatedDesc(id);
     }
 
     @Test
@@ -149,8 +151,9 @@ public class ItemRequestServiceImplTest {
         assertEquals(itemRequest.getId(), result.getId(), "id должно совпадать");
         assertEquals(itemRequest.getDescription(), result.getDescription(), "имя должно совпадать");
         assertEquals(itemRequest.getRequester().getId(), result.getRequester(), "descriptopn должно совпадать");
-        verify(itemRequestRepository, times(1)).findById(anyLong());
-        verify(itemRepository, times(1)).findByRequest_id(anyLong());
+
+        verify(itemRequestRepository, times(1)).findById(id);
+        verify(itemRepository, times(1)).findByRequest_id(id);
     }
 
 

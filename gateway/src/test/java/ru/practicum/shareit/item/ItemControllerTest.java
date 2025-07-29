@@ -69,12 +69,13 @@ public class ItemControllerTest {
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.name").value("test name"));
 
-        verify(itemClient, times(1)).createItem(anyLong(), any());
+        verify(itemClient, times(1)).createItem(eq(userId), any());
     }
 
     @Test
     void updateItem() throws Exception {
         when(itemClient.updateItem(anyLong(), eq(itemId), ArgumentMatchers.any())).thenReturn(ResponseEntity.ok(itemDtoRequest));
+
         mvc.perform(patch("/items/{itemId}", itemId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(itemDto))
@@ -86,12 +87,13 @@ public class ItemControllerTest {
                 .andExpect(jsonPath("$.id").value(itemId))
                 .andExpect(jsonPath("$.name").value("test name"));
 
-        verify(itemClient, times(1)).updateItem(anyLong(), eq(itemId), any());
+        verify(itemClient, times(1)).updateItem(eq(userId), eq(itemId), any());
     }
 
     @Test
     void getItemById() throws Exception {
         when(itemClient.getItemById(anyLong())).thenReturn(ResponseEntity.ok(itemDtoRequest));
+
         mvc.perform(get("/items/{itemId}", itemId)
                         .characterEncoding(StandardCharsets.UTF_8)
                         .accept(MediaType.APPLICATION_JSON)
@@ -99,14 +101,17 @@ public class ItemControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(itemId))
                 .andExpect(jsonPath("$.name").value("test name"));
-        verify(itemClient, times(1)).getItemById(anyLong());
+
+        verify(itemClient, times(1)).getItemById(itemId);
 
     }
 
     @Test
     void getAllByUserId() throws Exception {
         itemDto.setId(1L);
+
         when(itemClient.getItemByUserID(anyLong())).thenReturn(ResponseEntity.ok(Arrays.asList(itemDtoRequest)));
+
         mvc.perform(get("/items")
                         .characterEncoding(StandardCharsets.UTF_8)
                         .accept(MediaType.APPLICATION_JSON)
@@ -114,12 +119,14 @@ public class ItemControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].name").value("test name"));
-        verify(itemClient, times(1)).getItemByUserID(anyLong());
+
+        verify(itemClient, times(1)).getItemByUserID(userId);
     }
 
     @Test
     void searchItemByName() throws Exception {
         when(itemClient.searchItemByName(anyString())).thenReturn(ResponseEntity.ok(Arrays.asList(itemDtoRequest)));
+
         mvc.perform(get("/items/search")
                         .param("text", "testText")
                         .accept(MediaType.APPLICATION_JSON)
@@ -127,7 +134,8 @@ public class ItemControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].name").value("test name"));
-        verify(itemClient, times(1)).searchItemByName(anyString());
+
+        verify(itemClient, times(1)).searchItemByName("testText");
     }
 
     @Test
@@ -138,7 +146,6 @@ public class ItemControllerTest {
         commentDto.setId(itemId);
         commentDto.setText("testText");
         commentDto.setAuthorName("author");
-        // commentDto.setItem(item);
 
         when(itemClient.createComment(anyLong(), anyLong(), ArgumentMatchers.any())).thenReturn(ResponseEntity.ok(commentDto));
         mvc.perform(post("/items/{itemId}/comment", itemId)
@@ -151,6 +158,7 @@ public class ItemControllerTest {
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.authorName").value("author"))
                 .andExpect(jsonPath("$.text").value("testText"));
+
         verify(itemClient, times(1)).createComment(anyLong(), anyLong(), any());
 
     }

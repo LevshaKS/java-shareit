@@ -13,6 +13,7 @@ import ru.practicum.shareit.user.dto.UserDto;
 
 @Slf4j
 @Service
+
 public class UserClient extends BaseClient {
     private static final String API_PREFIX = "/users";
 
@@ -24,7 +25,16 @@ public class UserClient extends BaseClient {
                         .requestFactory(() -> new HttpComponentsClientHttpRequestFactory())
                         .build()
         );
+
     }
+
+//@Autowired
+ //   public UserClient(RestTemplate restTemplate ) {
+  //      super(restTemplate);
+   // }
+
+
+
 
     public ResponseEntity<Object> getAllUsers() {
         log.info("клиент - получение всего списка");

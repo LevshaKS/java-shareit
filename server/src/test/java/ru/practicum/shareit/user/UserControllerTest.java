@@ -58,7 +58,7 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.name").value("test"))
                 .andExpect(jsonPath("$.email").value("test@test.ru"));
 
-        verify(userService, times(1)).saveUser(any());
+        verify(userService, times(1)).saveUser(userDto);
     }
 
     @Test
@@ -73,7 +73,7 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.name").value("test"))
                 .andExpect(jsonPath("$.email").value("test@test.ru"));
 
-        verify(userService, times(1)).findByIdUser(anyLong());
+        verify(userService, times(1)).findByIdUser(eq(userId));
     }
 
     @Test
@@ -102,13 +102,14 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.name").value("test"))
                 .andExpect(jsonPath("$.email").value("test@test.ru"));
 
-        verify(userService, times(1)).updateUser(anyLong(), any());
+        verify(userService, times(1)).updateUser(eq(userId), any());
     }
 
     @Test
     void delUser() throws Exception {
         mvc.perform(delete("/users/{userId}", userId))
                 .andExpect(status().isOk());
+
         verify(userService, times(1)).deleteUser(userId);
     }
 }

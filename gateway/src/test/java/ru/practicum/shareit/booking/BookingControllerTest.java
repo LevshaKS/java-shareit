@@ -68,7 +68,8 @@ public class BookingControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.itemId").value(id))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
-        verify(bookingClient, times(1)).bookItem(anyLong(), any());
+
+       verify(bookingClient, times(1)).bookItem(eq(userId), any());
     }
 
 
@@ -85,7 +86,8 @@ public class BookingControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.itemId").value(id))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
-        verify(bookingClient, times(1)).getBooking(anyLong(), anyLong());
+
+        verify(bookingClient, times(1)).getBooking(eq(userId), eq(id));
     }
 
 }
