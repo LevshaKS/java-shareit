@@ -32,21 +32,22 @@ public class ItemValidateTest {
         itemDto.setAvailable(true);
 
     }
+
     @Test
-    void ItemDtoNotName (){
+    void ItemDtoNotName() {
         itemDto.setName(null);
         assertThrows(NotDataException.class, () -> validateItemController.validateItemDto(itemDto), "name не может быть пустым");
 
     }
 
     @Test
-    void ItemDtoNotDescription (){
+    void ItemDtoNotDescription() {
         itemDto.setDescription(null);
         assertThrows(NotDataException.class, () -> validateItemController.validateItemDto(itemDto), "Description не может быть пустым");
-       }
+    }
 
     @Test
-    void ItemDtoNotAvailable (){
+    void ItemDtoNotAvailable() {
         itemDto.setAvailable(null);
         assertThrows(NotDataException.class, () -> validateItemController.validateItemDto(itemDto), "Available не может быть пустым");
     }

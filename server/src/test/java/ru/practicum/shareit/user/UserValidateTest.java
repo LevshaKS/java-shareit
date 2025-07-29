@@ -11,42 +11,43 @@ import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
 @ExtendWith(MockitoExtension.class)
 public class UserValidateTest {
     UserDto userDto;
 
-@Mock
+    @Mock
     UserRepository userRepository;
 
     @InjectMocks
     ValidateUserController validateUserController;
 
     @BeforeEach
-    void setUp (){
-        userDto= new UserDto();
+    void setUp() {
+        userDto = new UserDto();
         userDto.setName("name");
         userDto.setEmail("test@email.ru");
 
     }
 
     @Test
-    void UserDtoNotName (){
+    void UserDtoNotName() {
         userDto.setName(null);
         assertThrows(NotDataException.class, () -> validateUserController.validateUserDto(userDto), "name не может быть пустым");
 
     }
 
     @Test
-    void UserDtoNotEmail (){
-         userDto.setEmail(null);
+    void UserDtoNotEmail() {
+        userDto.setEmail(null);
         assertThrows(NotDataException.class, () -> validateUserController.validateUserDto(userDto), "email не может быть пустым");
     }
 
 
     @Test
-    void UserDtoNotContains (){
+    void UserDtoNotContains() {
         userDto.setEmail("testemail.ru");
         assertThrows(NotDataException.class, () -> validateUserController.validateUserDto(userDto), "введен не email");
     }
 
- }
+}

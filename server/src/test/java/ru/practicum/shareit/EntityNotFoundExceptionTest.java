@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class EntityNotFoundExceptionTest {
 
     @Test
-    void createAndThrowException (){
+    void createAndThrowException() {
         String message = "Test";
         EntityNotFoundException exception = new EntityNotFoundException(message);
 
