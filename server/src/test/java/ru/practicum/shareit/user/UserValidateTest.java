@@ -31,21 +31,21 @@ public class UserValidateTest {
     }
 
     @Test
-    void UserDtoNotName() {
+    void userDtoNotName() {
         userDto.setName(null);
         assertThrows(NotDataException.class, () -> validateUserController.validateUserDto(userDto), "name не может быть пустым");
 
     }
 
     @Test
-    void UserDtoNotEmail() {
+    void userDtoNotEmail() {
         userDto.setEmail(null);
         assertThrows(NotDataException.class, () -> validateUserController.validateUserDto(userDto), "email не может быть пустым");
     }
 
 
     @Test
-    void UserDtoNotContains() {
+    void userDtoNotContains() {
         userDto.setEmail("testemail.ru");
         assertThrows(NotDataException.class, () -> validateUserController.validateUserDto(userDto), "введен не email");
     }

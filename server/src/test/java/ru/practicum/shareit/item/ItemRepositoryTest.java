@@ -56,7 +56,7 @@ public class ItemRepositoryTest {
     @Test
     void saveItem (){
         itemRepository.save(item);
-        Item saveItem = itemRepository.findById(1l).orElse(null);
+        Item saveItem = itemRepository.findById(1L).orElse(null);
         assertNotNull(saveItem);
         assertEquals(item.getName(), saveItem.getName());
     }
@@ -65,11 +65,11 @@ public class ItemRepositoryTest {
     void updateItem (){
         itemRepository.save(item);
         System.out.println(item);
-        Item saveItem = itemRepository.findById(4l).orElse(null);
+        Item saveItem = itemRepository.findById(4L).orElse(null);
         System.out.println(saveItem);
        saveItem.setName("newName");
         itemRepository.save(saveItem);
-       Item saveItemNew = itemRepository.findById(4l).orElse(null);
+       Item saveItemNew = itemRepository.findById(4L).orElse(null);
         assertNotNull(saveItemNew);
         assertEquals(saveItem.getName(), saveItemNew.getName());
     }
@@ -78,7 +78,7 @@ public class ItemRepositoryTest {
     void findById (){
         itemRepository.save(item);
         System.out.println(item);
-        Item saveItem = itemRepository.findById(3l).orElse(null);
+        Item saveItem = itemRepository.findById(3L).orElse(null);
         System.out.println(saveItem);
          assertNotNull(saveItem);
         assertEquals(saveItem.getName(), item.getName());
@@ -90,7 +90,7 @@ public class ItemRepositoryTest {
             itemRepository.save(item);
         System.out.println(item);
         System.out.println(user);
-        Collection<Item> saveItem = itemRepository.findByUserId(2l);
+        Collection<Item> saveItem = itemRepository.findByUserId(2L);
         System.out.println(saveItem);
         assertNotNull(saveItem);
         assertEquals(saveItem.toArray().length, 1);

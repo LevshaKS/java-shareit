@@ -9,17 +9,17 @@ import static org.junit.jupiter.api.Assertions.*;
 public class UserTest {
 
     @Test
-    void testStructure (){
+    void testStructure() {
         User user = new User();
 
         user.setId(1L);
         user.setName("name");
         user.setEmail("test@email.ru");
 
-        assertEquals (1L, user.getId());
-        assertEquals ("name", user.getName());
-        assertEquals ("test@email.ru", user.getEmail());
-          }
+        assertEquals(1L, user.getId());
+        assertEquals("name", user.getName());
+        assertEquals("test@email.ru", user.getEmail());
+    }
 
 
     @Test
@@ -38,7 +38,6 @@ public class UserTest {
 
         assertNotEquals(user1, user2);
     }
-
 
 
 }
