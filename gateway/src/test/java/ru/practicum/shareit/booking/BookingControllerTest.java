@@ -57,7 +57,7 @@ public class BookingControllerTest {
 
     @Test
     void createBooking() throws Exception {
-        when(bookingClient.bookItem(anyLong(), ArgumentMatchers.any())).thenReturn(ResponseEntity.ok(bookingDtoRequest));
+        when(bookingClient.saveBooking(anyLong(), ArgumentMatchers.any())).thenReturn(ResponseEntity.ok(bookingDtoRequest));
 
         mvc.perform(post("/bookings")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -69,13 +69,13 @@ public class BookingControllerTest {
                 .andExpect(jsonPath("$.itemId").value(id))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
-       verify(bookingClient, times(1)).bookItem(eq(userId), any());
+        verify(bookingClient, times(1)).saveBooking(eq(userId), any());
     }
 
 
     @Test
     void getBookingById() throws Exception {
-        when(bookingClient.getBooking(anyLong(), anyLong())).thenReturn(ResponseEntity.ok(bookingDtoRequest));
+        when(bookingClient.getBookingById(anyLong(), anyLong())).thenReturn(ResponseEntity.ok(bookingDtoRequest));
 
         mvc.perform(get("/bookings/{id}", id)
 
@@ -87,7 +87,7 @@ public class BookingControllerTest {
                 .andExpect(jsonPath("$.itemId").value(id))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
-        verify(bookingClient, times(1)).getBooking(eq(userId), eq(id));
+        verify(bookingClient, times(1)).getBookingById(eq(userId), eq(id));
     }
 
 }
