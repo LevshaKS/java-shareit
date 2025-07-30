@@ -15,7 +15,7 @@ import java.util.Collection;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@DataJpaTest(properties = {"spring.datasource.url=jdbc:h2:mem:testdb1"})
+@DataJpaTest(properties = {"spring.datasource.url=jdbc:h2:mem:testdb1","spring.jpa.hibernate.ddl-auto=create-drop"})
 public class ItemRepositoryTest {
 
     private Item item, item2;
