@@ -31,21 +31,21 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class BookingServiceImplTest {
     @Mock
-    BookingRepository bookingRepository;
+    private BookingRepository bookingRepository;
     @Mock
-    ItemRepository itemRepository;
+    private ItemRepository itemRepository;
     @Mock
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @InjectMocks
     private BookingServiceImpl bookingService;
 
-    BookingDto bookingDto;
-    Booking booking;
-    long id, userId;
+    private BookingDto bookingDto;
+    private Booking booking;
+    private long id, userId;
 
-    User user, user2;
-    Item item, item2;
+    private User user, user2;
+    private Item item, item2;
 
     @BeforeEach
     void setUp() {

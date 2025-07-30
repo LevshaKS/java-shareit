@@ -39,10 +39,10 @@ public class ItemServiceImplTest {
     private ItemRepository itemRepository;
 
     @Mock
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Mock
-    ItemRequestRepository itemRequestRepository;
+    private ItemRequestRepository itemRequestRepository;
 
     @Mock
     private ValidateItemController validateItemController;
@@ -56,12 +56,12 @@ public class ItemServiceImplTest {
     @InjectMocks
     private ItemServiceImpl itemService;
 
-    User user;
-    ItemDto itemDto;
-    Item item, itemUpdated;
-    long userId, id;
+    private User user;
+    private ItemDto itemDto;
+    private Item item, itemUpdated;
+    private long userId, id;
 
-    ItemRequest itemRequest;
+    private ItemRequest itemRequest;
 
     @BeforeEach
     void setUp() {

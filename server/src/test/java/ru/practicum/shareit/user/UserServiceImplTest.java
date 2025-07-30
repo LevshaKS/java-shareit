@@ -35,8 +35,8 @@ class UserServiceImplTest {
     private UserServiceImpl userService;
 
 
-    UserDto userDto;
-    User user;
+    private UserDto userDto;
+    private User user;
 
     @BeforeEach
     void setUp() {

@@ -16,8 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @ExtendWith(MockitoExtension.class)
 public class BookingValidateTest {
 
-    BookingDto bookingDto;
-    Item item;
+    private BookingDto bookingDto;
+    private  Item item;
 
     @InjectMocks
     private ValidateBookingController validateBookingController;

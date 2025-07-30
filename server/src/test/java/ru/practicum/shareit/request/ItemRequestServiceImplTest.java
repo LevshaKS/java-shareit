@@ -33,21 +33,21 @@ public class ItemRequestServiceImplTest {
     private ItemRepository itemRepository;
 
     @Mock
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Mock
-    ItemRequestRepository itemRequestRepository;
+    private ItemRequestRepository itemRequestRepository;
 
 
     @InjectMocks
     private ItemRequestServiceImpl itemRequestService;
 
-    User user;
-    Item item;
-    long id;
-    ItemRequest itemRequest;
+    private User user;
+    private Item item;
+    private long id;
+    private ItemRequest itemRequest;
 
-    ItemRequestDto itemRequestDto;
+    private ItemRequestDto itemRequestDto;
 
 
     @BeforeEach

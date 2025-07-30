@@ -15,13 +15,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @ExtendWith(MockitoExtension.class)
 public class ItemValidateTest {
 
-    ItemDto itemDto;
+    private ItemDto itemDto;
 
     @Mock
-    ItemRepository itemRepository;
+    private ItemRepository itemRepository;
 
     @InjectMocks
-    ValidateItemController validateItemController;
+    private ValidateItemController validateItemController;
 
     @BeforeEach
     void setUp() {
