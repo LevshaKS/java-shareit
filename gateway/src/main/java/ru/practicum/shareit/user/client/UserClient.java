@@ -28,12 +28,6 @@ public class UserClient extends BaseClient {
 
     }
 
-//@Autowired
- //   public UserClient(RestTemplate restTemplate ) {
-  //      super(restTemplate);
-   // }
-
-
 
 
     public ResponseEntity<Object> getAllUsers() {
