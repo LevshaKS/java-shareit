@@ -13,18 +13,20 @@ import ru.practicum.shareit.comment.dto.CommentDto;
 import ru.practicum.shareit.comment.model.Comment;
 import ru.practicum.shareit.comment.repository.CommentRepository;
 import ru.practicum.shareit.exception.ErrorIsNull;
+import ru.practicum.shareit.exception.NotDataException;
+import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.item.service.ItemServiceImpl;
+import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.request.repository.ItemRequestRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -38,6 +40,9 @@ public class ItemServiceImplTest {
 
     @Mock
     UserRepository userRepository;
+
+    @Mock
+    ItemRequestRepository itemRequestRepository;
 
     @Mock
     private ValidateItemController validateItemController;
@@ -56,7 +61,7 @@ public class ItemServiceImplTest {
     Item item, itemUpdated;
     long userId, id;
 
-
+    ItemRequest itemRequest;
 
     @BeforeEach
     void setUp() {
@@ -80,13 +85,17 @@ public class ItemServiceImplTest {
         itemDto.setName("testName");
         itemDto.setOwner(1L);
         itemDto.setAvailable(true);
+
+        itemRequest = new ItemRequest();
+        itemRequest.setDescription("test");
+        itemRequest.setCreated(LocalDateTime.now());
     }
 
     @Test
     void saveItem() {
-        when(itemRepository.save(any(Item.class))).thenReturn((item));
+        when(itemRepository.save(any(Item.class))).thenReturn(item);
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
-
+        lenient().when(itemRequestRepository.findById(anyLong())).thenReturn(Optional.of(itemRequest));
         ItemDto result = itemService.saveItem(userId, itemDto);
 
         assertNotNull(result, "не должен быть пустым");
@@ -191,6 +200,15 @@ public class ItemServiceImplTest {
     }
 
     @Test
+    void findItemByNameNotName() {
+
+        when(itemService.findItemByName("testName")).thenReturn(new ArrayList<>());
+        Collection<ItemDto> result = itemService.findItemByName("testName");
+        assertEquals(result, new ArrayList<>(), "не должен быть пустым");
+        verify(itemRepository, times(1)).findByNameContainingIgnoreCaseAndAvailable(anyString(), anyBoolean());
+    }
+
+    @Test
     void deleteItem() {
         long userId = 1;
         when(itemRepository.findById(id)).thenReturn(Optional.of(item));
@@ -199,16 +217,22 @@ public class ItemServiceImplTest {
         verify(itemRepository, times(1)).deleteByUserIdAndId(userId, id);
     }
 
-//    @Test
-//    void deleteItemNotFound() {
-//        id = 10L;
-//     //   when(itemService.getItemByItemId(id)).thenReturn(null);
-//        when(itemRepository.findById(id)).thenReturn(Optional.empty());
-//        assertThrows(NotDataException.class, () -> getItemByItemId(id), "нет вещи с таким id ");
-//       verify(itemService, never()).getItemByItemId(id);
-//
-//
-//    }
+    @Test
+    void deleteItemNotFound() {
+        id = 10L;
+        when(itemRepository.findById(anyLong())).thenThrow(NotDataException.class);
+        assertThrows(NotDataException.class, () -> itemService.deleteItem(userId, id), "нет вещи с таким id ");
+        verify(itemRepository, never()).deleteByUserIdAndId(userId, id);
+    }
+
+    @Test
+    void deleteItemNotOwner() {
+        id = 10L;
+        when(itemRepository.findById(anyLong())).thenThrow(ValidationException.class);
+        assertThrows(ru.practicum.shareit.exception.ValidationException.class, () -> itemService.deleteItem(userId, id), "нет вещи с таким id ");
+        verify(itemRepository, never()).deleteByUserIdAndId(userId, id);
+    }
+
 
     @Test
     void addComment() {
@@ -248,5 +272,30 @@ public class ItemServiceImplTest {
         verify(commentRepository).save(any(Comment.class));
 
     }
+
+//    @Test
+//    void findByNameComment() {
+//
+//        Comment comment = new Comment();
+//        CommentDto commentDto = new CommentDto();
+//
+//        comment.setId(1L);
+//        comment.setItem(item);
+//        comment.setAuthor(user);
+//        comment.setText("test");
+//        comment.setCreated(Instant.now());
+//
+//        commentDto.setItem(item);
+//        commentDto.setText("test");
+//        commentDto.setAuthorName(user.getName());
+//
+//
+//        Booking booking = new Booking();
+//        booking.setItem(item);
+//        booking.setId(1L);
+//        booking.setBooker(user);
+//        booking.setStart(Instant.now());
+//        booking.setEnd(Instant.now().plusSeconds(60));
+//        booking.setStatus(Status.APPROVED);
 
 }
