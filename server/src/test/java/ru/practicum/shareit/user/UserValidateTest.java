@@ -14,13 +14,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 public class UserValidateTest {
-    UserDto userDto;
+    private UserDto userDto;
 
     @Mock
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @InjectMocks
-    ValidateUserController validateUserController;
+    private ValidateUserController validateUserController;
 
     @BeforeEach
     void setUp() {
