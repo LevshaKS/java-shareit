@@ -272,30 +272,4 @@ public class ItemServiceImplTest {
         verify(commentRepository).save(any(Comment.class));
 
     }
-
-//    @Test
-//    void findByNameComment() {
-//
-//        Comment comment = new Comment();
-//        CommentDto commentDto = new CommentDto();
-//
-//        comment.setId(1L);
-//        comment.setItem(item);
-//        comment.setAuthor(user);
-//        comment.setText("test");
-//        comment.setCreated(Instant.now());
-//
-//        commentDto.setItem(item);
-//        commentDto.setText("test");
-//        commentDto.setAuthorName(user.getName());
-//
-//
-//        Booking booking = new Booking();
-//        booking.setItem(item);
-//        booking.setId(1L);
-//        booking.setBooker(user);
-//        booking.setStart(Instant.now());
-//        booking.setEnd(Instant.now().plusSeconds(60));
-//        booking.setStatus(Status.APPROVED);
-
 }
