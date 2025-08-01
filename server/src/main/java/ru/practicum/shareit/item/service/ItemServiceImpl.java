@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
@@ -16,9 +15,8 @@ import ru.practicum.shareit.comment.repository.CommentRepository;
 import ru.practicum.shareit.exception.ErrorIsNull;
 import ru.practicum.shareit.exception.NotDataException;
 import ru.practicum.shareit.exception.ValidationException;
-import ru.practicum.shareit.item.dto.ItemMapper;
-import ru.practicum.shareit.item.ValidateItemController;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.request.model.ItemRequest;
@@ -29,7 +27,9 @@ import ru.practicum.shareit.user.repository.UserRepository;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -45,13 +45,9 @@ public class ItemServiceImpl implements ItemService {
     private final BookingRepository bookingRepository;
     private final ItemRequestRepository itemRequestRepository;
 
-
-    private final ValidateItemController validateItemController;
-
     @Override
     @Transactional
     public ItemDto saveItem(long userId, ItemDto itemDto) {
-        validateItemController.validateItemDto(itemDto);
         User user = userRepository.findById(userId).orElseThrow(() -> new ErrorIsNull("нет такого пользователя"));
         Item item = ItemMapper.mapToItem(itemDto, user);
         if (itemDto.getRequestId() != null) {
@@ -67,9 +63,6 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public void deleteItem(long userId, long id) {
-        if (getItemByItemId(id) == null) {
-            throw new NotDataException("нет вещи с таким id " + id);
-        }
         if (getItemByItemId(id).getOwner() != userId) {
             throw new ValidationException("вы не являетесь владельцем вещи");
         }
@@ -84,10 +77,6 @@ public class ItemServiceImpl implements ItemService {
 
         Item item = ItemMapper.mapToItem(itemDto, user);
         Item itemOld = ItemMapper.mapToItem(getItemByItemId(itemId), user);
-
-        if (itemOld == null) {
-            throw new NotDataException("нет вещи с таким id " + itemId);
-        }
 
         if (itemOld.getUser().getId() != userId) {
             throw new ErrorIsNull("вы не являетесь владельцем вещи");
@@ -137,10 +126,6 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Collection<ItemDto> findItemByName(String name) {
-        if (name.isEmpty() || name.isBlank()) {
-            log.warn("передан пустой запрос поиска");
-            return new ArrayList<>();
-        }
         log.info("передан запрос поиска вещей по названию " + name.toLowerCase());
         return itemRepository.findByNameContainingIgnoreCaseAndAvailable(name, true).stream()
                 .map(ItemMapper::mapToItemDto)

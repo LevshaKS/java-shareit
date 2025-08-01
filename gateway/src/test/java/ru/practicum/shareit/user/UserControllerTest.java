@@ -29,6 +29,8 @@ class UserControllerTest {
     @MockBean
     UserClient userClient;
 
+    @MockBean
+    ValidateUserController validateUserController;
 
     UserController userController;
 

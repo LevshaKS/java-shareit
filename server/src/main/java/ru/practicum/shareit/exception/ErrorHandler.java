@@ -26,7 +26,7 @@ public class ErrorHandler {
 
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handlerValidationException(final ValidationException e) {
         log.warn("status - bar_request error: " + e.getMessage());
         return new ErrorResponse("error", e.getMessage());

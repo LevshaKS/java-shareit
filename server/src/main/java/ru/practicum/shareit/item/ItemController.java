@@ -27,7 +27,6 @@ public class ItemController {
     public ItemDto createItem(@Positive(message = "неверное значение") @RequestHeader("X-Sharer-User-Id") long userId,
                               @Valid @RequestBody ItemDto itemDto) {
         log.info("запрос создания вещи");
-        System.out.println(itemDto);
         return itemService.saveItem(userId, itemDto);
     }
 

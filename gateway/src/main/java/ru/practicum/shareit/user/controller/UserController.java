@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.user.ValidateUserController;
 import ru.practicum.shareit.user.client.UserClient;
 import ru.practicum.shareit.user.dto.UserDto;
 
@@ -20,6 +21,8 @@ import ru.practicum.shareit.user.dto.UserDto;
 public class UserController {
 
     private final UserClient userClient;
+
+    private final ValidateUserController validateUserController;
 
 
     @GetMapping("/{id}")
@@ -39,6 +42,7 @@ public class UserController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Object> createUser(@Valid @RequestBody UserDto userDto) {
+        validateUserController.validateUserDto(userDto);
         log.info("запрос добавления нового пользователя");
         return userClient.createUser(userDto);
     }

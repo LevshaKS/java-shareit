@@ -30,6 +30,9 @@ public class BookingControllerTest {
     @MockBean
     BookingClient bookingClient;
 
+    @MockBean
+    ValidateBookingController validateBookingController;
+
     @Autowired
     MockMvc mvc;
 

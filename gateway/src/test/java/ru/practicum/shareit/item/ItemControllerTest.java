@@ -31,6 +31,8 @@ public class ItemControllerTest {
     @MockBean
     ItemClient itemClient;
 
+    @MockBean
+    ValidateItemController validateItemController;
     @Autowired
     MockMvc mvc;
 

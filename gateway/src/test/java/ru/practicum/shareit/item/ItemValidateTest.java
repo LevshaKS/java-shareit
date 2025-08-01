@@ -4,11 +4,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.practicum.shareit.exception.NotDataException;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.repository.ItemRepository;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -17,8 +15,6 @@ public class ItemValidateTest {
 
     private ItemDto itemDto;
 
-    @Mock
-    private ItemRepository itemRepository;
 
     @InjectMocks
     private ValidateItemController validateItemController;

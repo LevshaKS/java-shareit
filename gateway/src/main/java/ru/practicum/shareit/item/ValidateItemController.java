@@ -4,16 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.exception.NotDataException;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.repository.ItemRepository;
 
 @Slf4j
 @Component
 public class ValidateItemController {
-    private final ItemRepository itemRepository;
-
-    public ValidateItemController(ItemRepository itemRepository) {
-        this.itemRepository = itemRepository;
-    }
 
     public void validateItemDto(ItemDto itemDto) {
         if (itemDto.getName() == null || itemDto.getName().isEmpty()) {

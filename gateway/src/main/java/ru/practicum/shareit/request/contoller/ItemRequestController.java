@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.exception.NotDataException;
 import ru.practicum.shareit.request.client.ItemRequestClient;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 
@@ -26,6 +27,9 @@ public class ItemRequestController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Object> createItemRequest(@Positive(message = "неверное значение") @RequestHeader("X-Sharer-User-Id") long userId,
                                                     @Valid @RequestBody ItemRequestDto itemRequestDto) {
+        if (itemRequestDto.getDescription() == null || itemRequestDto.getDescription().isEmpty() || itemRequestDto.getDescription().isBlank()) {
+            throw new NotDataException("description не может быть пустым");
+        }
         log.info("создание запроса создания вещи");
         return itemRequestClient.createItemRequest(userId, itemRequestDto);
     }

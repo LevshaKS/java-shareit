@@ -6,7 +6,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.practicum.shareit.exception.DuplicateDataException;
 import ru.practicum.shareit.exception.NotDataException;
+import ru.practicum.shareit.request.repository.ItemRequestRepository;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
@@ -26,6 +28,8 @@ class UserServiceImplTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private ItemRequestRepository itemRequestRepository;
 
     @Mock
     private ValidateUserController validateUserController;
@@ -75,6 +79,7 @@ class UserServiceImplTest {
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
         when(userRepository.save(any(User.class))).thenReturn((userUpdated));
 
+
         UserDto result = userService.updateUser(1L, userDto);
 
         assertNotNull(result, "не должен быть пустым");
@@ -93,6 +98,22 @@ class UserServiceImplTest {
         when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(NotDataException.class, () -> userService.updateUser(2L, userDto), "должна быть ошибка не найден id");
+
+        verify(userRepository, times(1)).findById(anyLong());
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    void updateUserEmail() {
+        User user2 = new User();
+        user2.setId(1L);
+        user2.setName("testName");
+        user2.setEmail("test@email.com");
+
+        when(userRepository.findById(2L)).thenReturn(Optional.of(user));
+        when(userRepository.findByEmail("test@email.com")).thenReturn(user2);
+
+        assertThrows(DuplicateDataException.class, () -> userService.updateUser(2L, userDto), "такой email уже есть");
 
         verify(userRepository, times(1)).findById(anyLong());
         verify(userRepository, never()).save(any());

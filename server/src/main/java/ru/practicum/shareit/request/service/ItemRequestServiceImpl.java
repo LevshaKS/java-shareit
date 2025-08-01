@@ -37,10 +37,6 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     @Transactional
     public ItemRequestDto saveItemRequest(long userId, ItemRequestDto itemRequestDto) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotDataException("нет такого пользователя"));
-
-        if (itemRequestDto.getDescription() == null || itemRequestDto.getDescription().isEmpty() || itemRequestDto.getDescription().isBlank()) {
-            throw new NotDataException("description не может быть пустым");
-        }
         ItemRequest itemRequest = RequestMapper.mapToRequest(itemRequestDto, user);
         itemRequest.setCreated(LocalDateTime.now());
         itemRequest = itemRequestRepository.save(itemRequest);

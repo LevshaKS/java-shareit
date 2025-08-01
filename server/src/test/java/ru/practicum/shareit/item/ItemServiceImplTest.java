@@ -44,8 +44,6 @@ public class ItemServiceImplTest {
     @Mock
     private ItemRequestRepository itemRequestRepository;
 
-    @Mock
-    private ValidateItemController validateItemController;
 
     @Mock
     private BookingRepository bookingRepository;
@@ -89,6 +87,7 @@ public class ItemServiceImplTest {
         itemRequest = new ItemRequest();
         itemRequest.setDescription("test");
         itemRequest.setCreated(LocalDateTime.now());
+        itemRequest.setId(1L);
     }
 
     @Test
@@ -143,6 +142,16 @@ public class ItemServiceImplTest {
 
         assertThrows(ErrorIsNull.class, () -> itemService.updateItem(userId, 2L, itemDto), "должна быть ошибка не найден id");
         verify(itemRepository, times(1)).findById(2L);
+        verify(itemRepository, never()).save(any());
+    }
+
+    @Test
+    void saveItemRequest() {
+        itemDto.setRequestId(2L);
+       lenient().when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
+        when(itemRequestRepository.findById(anyLong())).thenThrow(NotDataException.class);
+           assertThrows(NotDataException.class, () -> itemRequestRepository.findById(itemDto.getRequestId()), "нет такого запроса");
+        verify(itemRequestRepository, never()).save(any());
         verify(itemRepository, never()).save(any());
     }
 
@@ -224,6 +233,7 @@ public class ItemServiceImplTest {
         assertThrows(NotDataException.class, () -> itemService.deleteItem(userId, id), "нет вещи с таким id ");
         verify(itemRepository, never()).deleteByUserIdAndId(userId, id);
     }
+
 
     @Test
     void deleteItemNotOwner() {

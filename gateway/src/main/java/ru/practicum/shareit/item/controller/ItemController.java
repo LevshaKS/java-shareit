@@ -9,9 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.ValidateItemController;
 import ru.practicum.shareit.item.client.ItemClient;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
+
+import java.util.ArrayList;
 
 
 @Validated
@@ -21,14 +24,14 @@ import ru.practicum.shareit.item.dto.ItemDto;
 @RequestMapping("/items")
 public class ItemController {
     private final ItemClient itemClient;
-
+    private final ValidateItemController validateItemController;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Object> createItem(@Positive(message = "неверное значение") @RequestHeader("X-Sharer-User-Id") long userId,
                                              @Valid @RequestBody ItemDto itemDto) {
         log.info("запрос создания вещи");
-        System.out.println(itemDto);
+        validateItemController.validateItemDto(itemDto);
         return itemClient.createItem(userId, itemDto);
     }
 
@@ -68,9 +71,13 @@ public class ItemController {
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> searchItemByName(@RequestParam String text) {
-        log.info("запрос поиска вещи name " + text);
-        return itemClient.searchItemByName(text);
-
+        if (text.isEmpty() || text.isBlank()) {
+            log.warn("передан пустой запрос поиска");
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+        } else {
+            log.info("запрос поиска вещи name " + text);
+            return itemClient.searchItemByName(text);
+        }
     }
 
     @PostMapping("/{id}/comment")
